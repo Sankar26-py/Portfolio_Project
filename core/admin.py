@@ -1,0 +1,89 @@
+from django.contrib import admin
+from .models import (
+    Profile, AboutHighlight, Language, Certification,
+    SkillCategory, Skill, Experience, ExperienceBullet,
+    Project, Education, Achievement
+)
+
+
+class AboutHighlightInline(admin.TabularInline):
+    model = AboutHighlight
+    extra = 1
+
+
+class LanguageInline(admin.TabularInline):
+    model = Language
+    extra = 1
+
+
+class CertificationInline(admin.TabularInline):
+    model = Certification
+    extra = 1
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('👤 Personal Info', {
+            'fields': ('name', 'title', 'location', 'email', 'phone', 'is_open_to_work')
+        }),
+        ('🎯 Hero Section', {
+            'fields': ('tagline', 'tech_stack', 'bio')
+        }),
+        ('📊 Stats Row', {
+            'fields': ('years_exp', 'perf_gain', 'automation_gain', 'api_count', 'cgpa')
+        }),
+        ('🔗 Links', {
+            'fields': ('linkedin_url', 'github_url', 'github_project_url')
+        }),
+        ('📁 Files', {
+            'fields': ('photo', 'resume'),
+            'description': 'Upload your profile photo and resume PDF here'
+        }),
+        ('Footer', {
+            'fields': ('footer_text',)
+        }),
+    )
+    inlines = [AboutHighlightInline, LanguageInline, CertificationInline]
+
+
+class SkillInline(admin.TabularInline):
+    model = Skill
+    extra = 2
+
+
+@admin.register(SkillCategory)
+class SkillCategoryAdmin(admin.ModelAdmin):
+    list_display  = ('name', 'order')
+    list_editable = ('order',)
+    inlines       = [SkillInline]
+
+
+class ExperienceBulletInline(admin.TabularInline):
+    model = ExperienceBullet
+    extra = 2
+
+
+@admin.register(Experience)
+class ExperienceAdmin(admin.ModelAdmin):
+    list_display  = ('role', 'company', 'start_date', 'end_date', 'is_current', 'order')
+    list_editable = ('order', 'is_current')
+    inlines       = [ExperienceBulletInline]
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'label', 'is_external', 'order')
+    list_editable = ('order',)
+
+
+@admin.register(Education)
+class EducationAdmin(admin.ModelAdmin):
+    list_display  = ('degree', 'school', 'period', 'cgpa', 'order')
+    list_editable = ('order',)
+
+
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'icon', 'date_label', 'order')
+    list_editable = ('order',)
