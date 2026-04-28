@@ -90,17 +90,3 @@ git push -u origin main
 # Go to render.com → New Web Service → Connect GitHub → Deploy
 ```
 Live at: `https://sankar-portfolio.onrender.com`
-
-## Deploy — Azure Free Tier
-
-```bash
-az login
-az group create --name sankar-rg --location eastasia
-az appservice plan create --name sankar-plan --resource-group sankar-rg --sku F1 --is-linux
-az webapp create --resource-group sankar-rg --plan sankar-plan --name sankar-portfolio --runtime "PYTHON:3.11"
-az webapp config set --resource-group sankar-rg --name sankar-portfolio --startup-file "gunicorn portfolio_project.wsgi:application"
-az webapp config appsettings set --resource-group sankar-rg --name sankar-portfolio --settings SECRET_KEY="your-key" DEBUG="False" ALLOWED_HOSTS=".azurewebsites.net"
-zip -r portfolio.zip . -x "*.pyc" -x "__pycache__/*"
-az webapp deployment source config-zip --resource-group sankar-rg --name sankar-portfolio --src portfolio.zip
-```
-Live at: `https://sankar-portfolio.azurewebsites.net`
