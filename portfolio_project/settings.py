@@ -3,13 +3,13 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'change-me-in-production-use-env-variable')
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Allow localhost for dev, plus any host set in env (e.g. .onrender.com)
 _hosts = os.environ.get('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in _hosts.split(',') if h.strip()] or ['localhost', '127.0.0.1'] #or ['*']
+ALLOWED_HOSTS = [h.strip() for h in _hosts.split(',') if h.strip()] or ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

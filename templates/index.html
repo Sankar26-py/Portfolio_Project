@@ -7,6 +7,94 @@
 <title>{{ profile.name }} — Python Django Developer</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+/* ── INLINE MOBILE CSS — always fresh, never cached ── */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:.5rem .4rem;background:none;border:none;z-index:2000;flex-shrink:0;}
+.hamburger span{display:block;height:2px;border-radius:2px;background:#eaeaf5;transition:width .3s,transform .3s,opacity .3s,background .3s;}
+.hamburger span:nth-child(1){width:24px;}
+.hamburger span:nth-child(2){width:16px;}
+.hamburger span:nth-child(3){width:20px;}
+.hamburger.open span:nth-child(1){width:24px;transform:translateY(7px) rotate(45deg);background:#00e5a0;}
+.hamburger.open span:nth-child(2){opacity:0;width:0;}
+.hamburger.open span:nth-child(3){width:24px;transform:translateY(-7px) rotate(-45deg);background:#00e5a0;}
+
+.nav-drawer{position:fixed;top:0;left:0;width:78vw;max-width:300px;height:100vh;background:#0a0a0f;border-right:1px solid #2e2e42;display:flex;flex-direction:column;justify-content:center;padding:3rem 0;z-index:1500;transform:translateX(-110%);transition:transform .38s cubic-bezier(.4,0,.2,1);visibility:hidden;}
+.nav-drawer.open{transform:translateX(0);visibility:visible;}
+.drawer-link{display:block;font-family:'JetBrains Mono',monospace;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:#8888a8;text-decoration:none;padding:1.1rem 2rem;border-bottom:1px solid #252535;transition:color .2s,background .2s,padding-left .2s;}
+.drawer-link:first-child{border-top:1px solid #252535;}
+.drawer-link:active,.drawer-link:hover{color:#00e5a0;background:rgba(0,229,160,.06);padding-left:2.5rem;}
+
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1400;display:none;opacity:0;transition:opacity .35s;}
+.nav-overlay.visible{display:block;opacity:1;}
+
+@media(max-width:768px){
+  section[id]{scroll-margin-top:64px;}
+  nav{padding:.85rem 4%;gap:.6rem;flex-wrap:nowrap;}
+  .hamburger{display:flex;order:0;}
+  .nav-logo{order:1;flex:1;}
+  .nav-badge{order:2;font-size:.58rem;padding:.18rem .45rem;flex-shrink:0;}
+  .nav-links-desktop{display:none!important;}
+
+  #hero{padding:5.5rem 5% 3.5rem;min-height:100svh;}
+  .orb-c{display:none;}
+  .profile-photo-wrapper{flex-direction:row;align-items:center;gap:.85rem;margin-bottom:1.25rem;}
+  .profile-photo{width:80px;height:80px;border-width:2px;}
+  h1.name{font-size:clamp(2.6rem,12vw,4rem);line-height:.92;}
+  .hero-role{font-size:.7rem;margin-top:1rem;line-height:1.6;}
+  .hero-bio{font-size:.84rem;margin-top:1rem;line-height:1.7;}
+  .hero-cta{flex-direction:column;gap:.6rem;margin-top:1.75rem;}
+  .hero-cta .btn{width:100%;text-align:center;padding:.85rem 1rem;font-size:.74rem;}
+  .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.25rem;padding-top:1.75rem;}
+  .stat-n{font-size:1.45rem;}
+  .stat-l{font-size:.58rem;}
+
+  section{padding:3.5rem 5%;}
+  h2.s-title{font-size:clamp(1.65rem,7.5vw,2.2rem);margin-bottom:1.75rem;word-break:break-word;}
+
+  .about-grid{grid-template-columns:1fr;gap:1.75rem;}
+  .about-text p{font-size:.86rem;line-height:1.75;}
+  .about-sidebar{gap:1rem;}
+  .aside-card{padding:1rem;}
+
+  .skills-grid{grid-template-columns:1fr;gap:.9rem;}
+  .sk-cat{padding:1rem;}
+
+  /* EXPERIENCE — critical fixes */
+  .tcs-wrapper{padding:1rem;}
+  .tcs-header{flex-direction:column!important;align-items:flex-start!important;gap:.6rem!important;}
+  .tcs-circle{width:36px;height:36px;font-size:.62rem;flex-shrink:0;}
+  .tcs-name{font-size:.88rem;word-break:break-word;}
+  .tcs-sub{font-size:.62rem;white-space:normal!important;}
+  .tcs-dur{font-size:.62rem;white-space:normal!important;word-break:break-word;}
+
+  /* ROLE TABS — force vertical stack */
+  .role-tabs{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important;overflow:hidden!important;border:1px solid #252535;border-radius:6px;margin-bottom:1.25rem;}
+  .rtab{width:100%!important;font-size:.77rem!important;padding:.85rem 1rem!important;white-space:normal!important;border-radius:0!important;border:none!important;border-bottom:1px solid #252535!important;text-align:left!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex-shrink:0!important;box-sizing:border-box!important;}
+  .rtab:last-child{border-bottom:none!important;}
+  .rtab.active{background:rgba(124,111,255,.1)!important;border-left:3px solid #7c6fff!important;padding-left:calc(1rem - 3px)!important;color:#7c6fff!important;}
+
+  .exp-head{flex-direction:column;gap:.4rem;}
+  .exp-role{font-size:.98rem;}
+  .exp-date{font-size:.62rem;align-self:flex-start;}
+  .exp-ul li{font-size:.81rem;line-height:1.62;}
+
+  .proj-grid{grid-template-columns:1fr;gap:1rem;}
+  .proj-card{padding:1.2rem;}
+  .edu-grid{grid-template-columns:1fr;gap:.9rem;}
+  .edu-card{padding:1.2rem;}
+  .ach-grid{grid-template-columns:1fr;gap:.9rem;}
+  .ach-card{padding:1rem;gap:.7rem;}
+  .cchips{flex-direction:column;align-items:stretch;gap:.55rem;}
+  .cchip{justify-content:center;font-size:.71rem;padding:.75rem 1rem;}
+  footer{font-size:.61rem;padding:1.4rem 5%;}
+}
+@media(max-width:380px){
+  h1.name{font-size:clamp(2.2rem,13vw,3rem);}
+  .stats-row{grid-template-columns:1fr 1fr;gap:.7rem;}
+  .stat-n{font-size:1.25rem;}
+}
+</style>
+
 {% if GOOGLE_ANALYTICS_ID %}
 <!-- Google Analytics GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
@@ -24,11 +112,11 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">SK<span>.</span></div>
   <button class="hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-  <ul id="navMenu">
+  <div class="nav-logo">SK<span>.</span></div>
+  <ul class="nav-links-desktop">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -39,6 +127,16 @@
   <span class="nav-badge">Open to Work</span>
   {% endif %}
 </nav>
+
+<!-- MOBILE DRAWER — separate from nav to avoid CSS conflicts -->
+<div class="nav-drawer" id="navDrawer">
+  <a href="#about" class="drawer-link">About</a>
+  <a href="#skills" class="drawer-link">Skills</a>
+  <a href="#experience" class="drawer-link">Experience</a>
+  <a href="#projects" class="drawer-link">Projects</a>
+  <a href="#contact" class="drawer-link">Contact</a>
+</div>
+<div class="nav-overlay" id="navOverlay"></div>
 
 <!-- HERO -->
 <section id="hero">
@@ -269,10 +367,112 @@
 
 <footer>{{ profile.footer_text }}</footer>
 
-<!-- skillData from DB injected BEFORE main.js so it's available when JS runs -->
 <script>
-  const skillData = {{ skill_data_json|safe }};
+const skillData = {{ skill_data_json|safe }};
 </script>
 <script src="{% static 'js/main.js' %}"></script>
+
+<!-- INLINE CRITICAL JS — runs after DOM, bypasses all caching -->
+<script>
+(function() {
+
+  // ── Role tabs fix on mobile ───────────────────────────────
+  function fixRoleTabs() {
+    if (window.innerWidth > 768) return;
+    var tabs = document.querySelector('.role-tabs');
+    if (!tabs) return;
+    tabs.style.cssText = 'display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important;border:1px solid #252535;border-radius:6px;overflow:hidden;margin-bottom:1.25rem;';
+    var rtabs = tabs.querySelectorAll('.rtab');
+    rtabs.forEach(function(tab, i) {
+      tab.style.cssText = 'width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:.85rem 1rem!important;font-size:.77rem!important;white-space:normal!important;border-radius:0!important;border:none!important;border-bottom:1px solid #252535!important;text-align:left!important;box-sizing:border-box!important;cursor:pointer;';
+      if (i === rtabs.length - 1) tab.style.borderBottom = 'none';
+    });
+  }
+
+  // Override switchRole to also update styles on mobile
+  window.switchRole = function(idx) {
+    var rtabs  = document.querySelectorAll('.rtab');
+    var panels = document.querySelectorAll('.role-panel');
+    rtabs.forEach(function(t, i) {
+      t.classList.toggle('active', i === idx);
+      if (window.innerWidth <= 768) {
+        if (i === idx) {
+          t.style.background = 'rgba(124,111,255,.1)';
+          t.style.borderLeft = '3px solid #7c6fff';
+          t.style.paddingLeft = 'calc(1rem - 3px)';
+          t.style.color = '#7c6fff';
+        } else {
+          t.style.background = '';
+          t.style.borderLeft = '';
+          t.style.paddingLeft = '1rem';
+          t.style.color = '';
+        }
+      }
+    });
+    panels.forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+  };
+
+  // ── Hamburger drawer ──────────────────────────────────────
+  function initDrawer() {
+    var hamburger = document.getElementById('hamburger');
+    var drawer    = document.getElementById('navDrawer');
+    var overlay   = document.getElementById('navOverlay');
+    if (!hamburger || !drawer || !overlay) return;
+
+    function openNav() {
+      hamburger.classList.add('open');
+      drawer.style.transform   = 'translateX(0)';
+      drawer.style.visibility  = 'visible';
+      overlay.style.display    = 'block';
+      overlay.style.opacity    = '1';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeNav() {
+      hamburger.classList.remove('open');
+      drawer.style.transform   = 'translateX(-110%)';
+      drawer.style.visibility  = 'hidden';
+      overlay.style.opacity    = '0';
+      setTimeout(function() { overlay.style.display = 'none'; }, 350);
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      drawer.style.visibility === 'visible' ? closeNav() : openNav();
+    });
+
+    drawer.querySelectorAll('.drawer-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = link.getAttribute('href');
+        closeNav();
+        setTimeout(function() {
+          var target = document.querySelector(targetId);
+          if (!target) return;
+          var navH = (document.querySelector('nav') || {offsetHeight:60}).offsetHeight;
+          var top  = target.getBoundingClientRect().top + window.scrollY - navH - 4;
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }, 400);
+      });
+    });
+
+    overlay.addEventListener('click', closeNav);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+  }
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      fixRoleTabs();
+      initDrawer();
+    });
+  } else {
+    fixRoleTabs();
+    initDrawer();
+  }
+
+})();
+</script>
 </body>
 </html>
